@@ -45,7 +45,11 @@ class Users extends BaseAPIController
                 // Return the error response
                 $data =   $this->validation->getErrors();
 
-                return $this->fail($data, 400);
+                 $response = [
+                    'messages' => $data,
+                    'status' => 400
+                ];
+                
 
         } else {
 
@@ -69,7 +73,7 @@ class Users extends BaseAPIController
 
         }
         
-        return $this->respond($response, $response['status']);
+        return $this->respond($response);
     }
 
 
@@ -94,7 +98,10 @@ class Users extends BaseAPIController
 
             $data =   $this->validation->getErrors();
 
-            return $this->fail($data, 400);
+            $response = [
+                    'messages' => $data,
+                    'status' => 400
+                ];
 
          } else {
 
@@ -117,7 +124,7 @@ class Users extends BaseAPIController
 
          }
 
-		return $this->respond($response, $response['status']);
+		return $this->respond($response);
 	}
 
     /*
@@ -180,10 +187,9 @@ class Users extends BaseAPIController
             if ($decoded) {
 
                 $response = [
-                    'status' => 200,
-                    'error' => FALSE,
-                    'messages' => 'User details',
-                    'data' => $decoded
+                        'status' => 200,
+                        'messages' => 'User details',
+                        'data' => $decoded
                 ];
 
                 return $this->respondCreated($response);
@@ -191,9 +197,8 @@ class Users extends BaseAPIController
         } catch (Exception $ex) {
             
             $response = [
-                'status' => 401,
-                'error' => TRUE,
-                'messages' => 'Access denied'
+                    'status' => 401,
+                    'messages' => 'Access denied'
             ];
 
             return $this->respondCreated($response);
