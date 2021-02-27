@@ -1,5 +1,5 @@
 <?= view('inc\header') ?>
 
-<?= view('form\login') ?>
+<?= $body ?>
 
 <?= view('inc\footer') ?>
