@@ -18,7 +18,7 @@ if (file_exists(SYSTEMPATH . 'Config/Routes.php'))
  * --------------------------------------------------------------------
  */
 $routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('Home');
+$routes->setDefaultController('Main');
 $routes->setDefaultMethod('login');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
@@ -39,11 +39,11 @@ $routes->setAutoRoute(true);
  * Frontend 
  * --------------------------------------------------------------------
  */
-$routes->add('/', 'Home::index');
-$routes->add('login', 'Home::login');
-$routes->add('main', 'Home::main');
-$routes->add('register', 'Home::register');
-$routes->add('logout', 'Home::logout');
+$routes->add('/', 'Main::index');
+$routes->add('login', 'Main::login');
+$routes->add('main', 'Main::index');
+$routes->add('register', 'Main::register');
+$routes->add('logout', 'Main::logout');
 
 /*
  * --------------------------------------------------------------------

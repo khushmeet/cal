@@ -81,9 +81,8 @@ var app = {
 		//************Write all section Load functions here**********************//
 		
 		// check if certain class exist
-		if($('body.load-model').length > 0 ){
+		if($('body.load-task').length > 0 ){
 			app.loader.add();
-			$('.loader-wrapper').css({"margin-top": "13%"});
 			var value = app.urlValue.getLastPart();
 			$( ".main-content" ).load( "/data/productContent/"+value, function() {
 				app.loader.remove();
@@ -126,7 +125,7 @@ var app = {
 
     events : function () {
 
-		//login button
+		//login button clicked 
 		$('body').on('click','#login-button',function(){
 
 			var email = $('#login input[name="email"]').val();
@@ -143,7 +142,7 @@ var app = {
 
 				 	window.location.href = "main";
 
-				 }else if(response.messages) {
+				 } else if(response.messages) {
 
 				 	$.each(response.messages, function( index, value ) {
 
@@ -172,11 +171,12 @@ var app = {
 			
 			$('div').remove( ".alert" );
 			
-			app.ajaxHtml('http://localhost/cal/public/api/register', {email: email, password: password, name:name },'register-button' ,function (response) {
+			app.ajaxHtml('register', {email: email, password: password, name:name },'register-button' ,function (response) {
 				console.log(response);
+
 				 if(response.status == 200) {
 
-				 	window.location.href = "main";
+				 	$('.errormsg').append('<div class="alert alert-success">' + response.messages + '</div>');
 
 				 }else if(response.messages) {
 
@@ -187,7 +187,7 @@ var app = {
 					});
 
 				 }else {
-				 	
+                    
 				 	$('.errormsg').append('<div class="alert alert-danger">' + response.message + '</div>');	
 				 
 				 }
