@@ -75,24 +75,56 @@ class BaseAPIController extends BaseController
     }
 
     /**
-    * Decode Token 
+    * Decode Token exit if invalid or expired token
     * @param  array $data
     * @return string Token 
     */
-    protected function decodeToken(string $token) : array
+    protected function decodeToken(string $token) 
     {
 
         // secret key
         $key = self::KEY;
 
-        $decoded = JWT::decode($token, $key, array("HS256"));
-        
-        if ($decoded) { 
+        try {
+            
+            // decode the toekn
+            $decoded = JWT::decode($token, $key, array("HS256"));
+            
+            return $decoded; 
 
-            echo "<pre>";
-            print_r($decoded);
+        } catch (Exception $e) {
+  
+            $response = [
+                    
+                    'messages' => $e->getMessage(),
+                    'status' => 400
+                ];
+
+            header('Content-Type: application/json');
+            echo json_encode($response);
             exit();
         }
+
+    }
+
+    /**
+    * Get the token and check if its expired or not 
+    */
+    protected function fetchHeaders() 
+    {
+
+        $authHeader = $this->request->getHeader("Authorization");
+        
+        if(!$authHeader) {
+
+            return $this->failValidationError('Request Failed');
+
+        }
+
+        // get token value from header
+        $token = $authHeader->getValue();
+
+        return  $this->decodeToken( $token );
 
     }
 

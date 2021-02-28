@@ -14,18 +14,29 @@ class Schedule extends BaseAPIController
 	
 	public function __construct() {
 
-		$this->model = new ScheduleModel();
+        parent::__construct();
+
+		$this->scheduleModel = new ScheduleModel();
 
 	}
 
-	public function index($id)
+	public function index()
 	{
-		 echo $id;
-echo "string";
-exit();
-        $data = $this->model->findAll();
+		 
+        $userdata =  $this->fetchHeaders();
+         
+        if($userdata->data->id) {
 
-        return $this->respond($data);
+            $user = $this->scheduleModel->where('user_id',  $userdata->data->id)->findAll();
+
+             $response = [
+                    'data' => $user,
+                    'messages' => 'Success',
+                    'status' => 200
+                ];
+
+            return $this->respond($response);
+        }
 
 	}
 
