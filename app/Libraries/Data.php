@@ -131,6 +131,25 @@ class Data extends API {
 		}		
 
 	}
-	
+
+	/**
+	 * Register User
+	 * @return array 
+	 */
+	public function registerUser($data)
+	{
+		
+		// set parameter 
+		$this->_params = [ 'email' => $data['email'], 'password' => $data['password'], 'name' => $data['name']  ]; 
+		
+		// set header status
+		$this->headers_required = false;
+
+		// set request method
+		$this->method = 'POST';
+
+		return  $this->get_request('register', $this->_params );
+
+	}
 	
 }
