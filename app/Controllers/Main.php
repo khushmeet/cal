@@ -104,6 +104,15 @@ class Main extends BaseController
 
 		// Validate request
         $response = $LData->registerUser($_POST);
+        
+        if(!empty($response)) {
+        	
+        	$response = $response['response'];
+        
+        }else{
+
+        	$response = ['message' => 'Oops! Some issue occured Please try again.' ];
+        }
 
          returnJson($response);
 	}
