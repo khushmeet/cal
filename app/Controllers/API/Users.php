@@ -182,7 +182,8 @@ class Users extends BaseAPIController
 
             $token = $authHeader->getValue();
 
-            $this->decodeToken($token);
+
+            $decoded =  $this->decodeToken($token);
 
             if ($decoded) {
 

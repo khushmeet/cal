@@ -44,19 +44,20 @@ $routes->get('/', 'Home::index');
  * --------------------------------------------------------------------
  */
 
-// Schedule routing
-$routes->get('get-schedule', 'API/Schedule::index');
-$routes->put('show-schedule', 'API/Schedule::show');
-$routes->get('create-schedule', 'API/Schedule::create');
 
-// User Routing
+
+//Routing
  $routes->group("api", function ($routes) {
 
    	$routes->post("register", "API/Users::createUser");
 	$routes->post("login",   "API/Users::validateUser");
 	$routes->get("userdata", "API/Users::userDetails");
-//    // $routes->post("logout", "User::logoutUser");
- 	//$routes->get('register', 'APIUsers::createUser');
+
+	// Schedule routing
+	$routes->get('get-schedule', 'API/Schedule::index');
+	$routes->put('show-schedule', 'API/Schedule::show');
+	$routes->get('create-schedule', 'API/Schedule::create');
+
  });
 
 /*
