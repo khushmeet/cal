@@ -14,6 +14,7 @@ class Main extends BaseController
 	*/
 	public function index()
 	{
+		// helper : check if user is logged in?
 		loginCheck();
 		
 		$data['body'] = view('main\index');
@@ -55,20 +56,19 @@ class Main extends BaseController
 
 		// Validate request
         $response = $LData->validateRequest($_POST);
-       
+
+        // if valid user set session 
         if($response['status_code'] === 200 && isset($response['response']['token'])) {
 				
-				$this->session->set($response['response']);
-       		
-       		$response = ['message' =>$response['response']['message'], 'status' => $response['response']['status']];
-
-        } else {
-
-        	$response = $response['response'];
-        	
+			$this->session->set($response['response']);
+       	
         }
 
-         returnJson($response);
+        // return api response
+        $response = $response['response'];
+        	
+		returnJson($response);
+
 	}
 
 	/*
@@ -114,7 +114,7 @@ class Main extends BaseController
         	$response = ['message' => 'Oops! Some issue occured Please try again.' ];
         }
 
-         returnJson($response);
+        returnJson($response);
 	}
 
 	/*

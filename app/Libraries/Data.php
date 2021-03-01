@@ -18,7 +18,7 @@ class Data extends API {
 	
 	protected $data  = [];
 	
-	protected $params = [];
+	protected $_params = [];
 	
 	// By Default header always required
 	protected $headers_required = true;
@@ -48,8 +48,8 @@ class Data extends API {
 		if($this->headers_required) { 
 
 			$this->headers =  [
-			    'Content-Type:application/json',
-				'Authorization: Basic '. base64_encode($this->_partsarena_username . ":" . $this->_partsarena_pwd) // <---
+			   
+				'Authorization: '. $_SESSION['token'] .'',
 			];
 
 		}
@@ -64,9 +64,8 @@ class Data extends API {
 	{	
 		$this->set_headers();
 		
-		$response = $this->request();
+		return $response = $this->request();
 		
-        return $response;
 	}
 	
 	
@@ -151,5 +150,73 @@ class Data extends API {
 		return  $this->get_request('register', $this->_params );
 
 	}
+
+	/**
+	 * Get all task
+	 * @return array 
+	 */
+	public function getAllTask()
+	{
+		
+		return  $this->get_request('get-schedule');
+
+	}
 	
+	/**
+	 * delete task
+	 * @return array 
+	 */
+	public function deleteTask($taskid)
+	{	
+
+		$this->_params = ['taskid'=>$taskid ];
+		
+		return  $this->get_request('delete-schedule', $this->_params);
+
+	}
+
+	/**
+	 * Add task
+	 * @return array 
+	 */
+	public function addTask($data)
+	{	
+
+		$this->_params = $data;
+		
+		// set request method
+		$this->method = 'POST';
+
+		return  $this->get_request('create-schedule', $this->_params);
+
+	}
+
+	/**
+	 * edit task
+	 * @return array 
+	 */
+	public function editTask($data)
+	{	
+
+		$this->_params = $data;
+
+		// set request method
+		$this->method = 'POST';
+		
+		return  $this->get_request('update-schedule', $this->_params);
+
+	}
+
+	/**
+	 * show task
+	 * @return array 
+	 */
+	public function showTask($taskid)
+	{	
+
+		$this->_params = ['taskid'=>$taskid ];
+		
+		return  $this->get_request('show-schedule', $this->_params);
+
+	}
 }

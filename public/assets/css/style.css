@@ -232,7 +232,7 @@ ul li.checked::before {
   clear: both;
 }
 .margin-75{
-  margin-left: 75%;
+  margin-left: 60%;
 }
 /* Style the input */
 .card-body input {

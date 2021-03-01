@@ -38,18 +38,51 @@ var app = {
 		//************Write all section Load functions here**********************//
 		
 		// check if certain class exist
-		if($('body.load-task').length > 0 ){
-			app.loader.add();
-			var value = app.urlValue.getLastPart();
-			$( ".main-content" ).load( "/data/productContent/"+value, function() {
-				app.loader.remove();
-				$(".modal-preload-parts").click();
-			});
+		if($('body .load-tasks').length > 0 ){
+			
+			app.tasks.loadTasks();
+			
 		}
 
 	},
 
     events : function () {
+
+
+    	//add task button clicked 
+		$('body').on('click','#add-task',function(){
+
+			var title = $('#myDIV input[name="title"]').val();
+
+			var start_time = $('#myDIV input[name="start_time"]').val();
+			
+			if(title.length >= 4 && start_time.length > 0  )
+			{
+				app.tasks.createTask(title, start_time);
+			}else {
+				alert('Tile should be min 4 character and date should be valid');
+			}
+
+		});
+
+		// edit task 
+		$('body').on('click','.save-task',function(){
+
+			var title = $('.modal-data input[name="title"]').val();
+
+			var start_time = $('.modal-data input[name="start_time"]').val();
+
+			var taskid = $('.modal-data input[name="id"]').val();
+			
+			if(title.length >= 4 && start_time.length > 0  )
+			{
+				app.tasks.editTask(title, start_time, taskid);
+			}else {
+				alert('Tile should be min 4 character and date should be valid');
+			}
+
+		});
+
 
 		//login button clicked 
 		$('body').on('click','#login-button',function(){
@@ -102,7 +135,9 @@ var app = {
 				
 				if(response.status == 200) {
 
-				 	$('.errormsg').append('<div class="alert alert-success">' + response.message + '</div>');
+				 	$('.errormsg').append('<div class="alert alert-success">' + response.messages.Success + '</div>');
+
+				 	$("#name, #email, #password").val("");
 
 				 }else if(response.messages) {
 
@@ -124,16 +159,117 @@ var app = {
 		
     },
 	
+	tasks : {
+
+		// load all tasks
+		loadTasks : function() {
+
+			app.ajaxHtml('alltask', '', '', function (response) {
+					
+					console.log(response.html);
+					$('.load-tasks').html(response.html);
+			});
+
+			app.loader.remove();
+		},
+
+		createTask : function(title, start_time) {
+
+			app.loader.add();
+
+			app.ajaxHtml('addtask', {title:title, start_time:start_time }, '', function (response) {
+					//console.log(response.response);
+				if(response.response.messages) {
+
+					if(response.response.status == 200) {
+
+						app.tasks.loadTasks();
+					}
+
+					if(response.response.status != 200 ) {
+
+						$.each(response.response.messages, function( index, value ) {
+
+  							alert(value);
+					
+						});
+
+					}
+	
+				}	
+			});
+			app.loader.remove();
+			
+
+		},
+
+		// get single task
+		loadTask : function(taskid) {
+
+			app.loader.add();
+
+			$('div').remove('.modal-data');
+
+			app.ajaxHtml('showtask', {taskid: taskid },'' ,function (response) {
+						//console.log(response)
+					$('.modal-body').append(response.html);
+			});
+
+			app.loader.remove();
+		},
+
+		// delete task
+		deleteTask : function(id) {
+
+				if(confirm("Are you sure you want to delete this task?")){
+					app.ajaxHtml('deletetask', {taskid:id},'' ,function (response) {
+						app.tasks.loadTasks();
+					});
+
+					// load task
+				}
+		},
+
+		// edit task
+		editTask : function(title, start_time, taskid) {
+
+			app.loader.add();
+			
+			$('div').remove( ".alert" );
+
+			app.ajaxHtml('edittask', {title:title, start_time:start_time, taskid:taskid  },'' ,function (response) {
+					
+				if(response.response.messages) {
+
+						$.each(response.response.messages, function( index, value ) {
+
+  							$('.msg').append('<div class="alert alert-primary" role="alert">' + value + '</div>');	
+					
+						});
+
+						app.tasks.loadTasks();
+					}
+
+			});
+
+			app.loader.remove();
+		},
+
+
+	},
+
 	urlValue : {
-		getLastPart : function(){
+		getLastPart : function() {
 			var url      = window.location.href;  
 			return  url.substring(url.lastIndexOf('/') + 1);
-		}
+		},
 	},
+
 	loader: {
-		remove : function(){
+		remove : function() {
 			$('div').remove('.loading');
 		},
+
 		add: function() {
 			$('.loader-wrapper').append('<div class="loading">Loading&#8230;</div>');
 		}

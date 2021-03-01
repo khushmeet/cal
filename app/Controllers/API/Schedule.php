@@ -34,7 +34,7 @@ class Schedule extends BaseAPIController
         $this->validateRequest(1);
 
         // get task from db
-        $task = $this->scheduleModel->where('user_id',  $this->userdata->data->id)->findAll();
+        $task = $this->scheduleModel->where('user_id',  $this->userdata->data->id)->orderBy('start_time', 'ASC')->findAll();
 
         // set API response via helper
         $response = !empty($task) ? setAPIresponse(['Success'=>'Data Found'], 200, ['data' => $task] ) : setAPIresponse(['Success'=>'Data not Found'], 200 );

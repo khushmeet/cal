@@ -62,3 +62,10 @@ function setAPIResponse($message, $status, $other=null)
 	return $response;
 
 }
+
+function convertDate($timestamp) 
+{
+
+	
+return  gmdate("d-m-Y", $timestamp);
+}

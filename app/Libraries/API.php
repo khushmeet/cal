@@ -50,7 +50,7 @@ class API {
         ));
 		
 
-		//curl_setopt($curl, CURLOPT_HTTPHEADER, $this->headers);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, $this->headers);
 		
 		if(!empty($this->params)) {
 			$data = json_encode($this->params);
@@ -58,9 +58,11 @@ class API {
 		}
 		
 		$response = curl_exec($curl);
+		
 		$code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		curl_close($curl);
 		
+
 		return ['status_code' => $code,'response'=>self::decodeJson($response,true)];
 				
     }

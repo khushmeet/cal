@@ -44,6 +44,13 @@ $routes->add('login', 'Main::login');
 $routes->add('main', 'Main::index');
 $routes->add('register', 'Main::register');
 $routes->add('logout', 'Main::logout');
+$routes->add('alltask', 'Tasks::index');
+$routes->add('deletetask', 'Tasks::deleteTask');
+$routes->add('edittask', 'Tasks::editTask');
+$routes->add('showtask', 'Tasks::showTask');
+$routes->add('addtask', 'Tasks::addTask');
+
+
 
 /*
  * --------------------------------------------------------------------

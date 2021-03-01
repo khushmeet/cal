@@ -17,22 +17,17 @@
             <div class="card card-white">
                 <div class="card-body">
                     
-					<div id="myDIV" class="header">
-						<h2 > <span>Khush</span> To Do List</h2>
-						<input type="text" id="myInput" placeholder="Title...">
-						<input type="date" id="myInput" placeholder="Title...">
-						<span class="addBtn">Add</span>
-					</div>
-					<ul id="myUL" class="load-tasks">
-						<li>Hit the gym 
-							<span class="margin-75"> 
-								<span class="view-task"><i class="fa fa-eye" aria-hidden="true"></i></span>
-								<span class="edit-task ml-2"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
-								<span class="delete-task ml-2"> <i class="fa fa-trash" aria-hidden="true"></i></span> 
-							</span></li>
+        					<div id="myDIV" class="header">
+        						<h2 > <span>My</span> To Do List</h2>
+        						<input type="text"  name="title" placeholder="Title...">
+        						<input type="date"  name="start_time" placeholder="dd/mm/yyy">
+        						<span class="addBtn" id="add-task">Add</span>
 
-						<li>Organize office</li>
-					</ul>
+                    <div class="errormsg"></div>
+        					</div>
+					       
+                  <ul id="myUL" class="load-tasks">
+                  </ul>
 
                 </div>
             </div>
