@@ -1,3 +1,5 @@
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/b98d6077faacf5521fba)
+
 # CodeIgniter 4 Framework
 
 ## What is CodeIgniter?
