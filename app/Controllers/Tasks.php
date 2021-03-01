@@ -51,8 +51,8 @@ class Tasks extends BaseController
 		$time = isset($_POST['start_time'])  ? $_POST['start_time'] : 0;
 
 		if(isset($_POST['title']) && $time) {
-			
-			$data = [ 'title'=>$_POST['title'], 'start_time'=>strtotime($_POST['start_time']) ];
+
+			$data = [ 'title'=>$_POST['title'], 'start_time'=>convertTime($_POST['start_time']) ];
 			
 			$result = $this->LData->addTask($data);
 
@@ -92,7 +92,7 @@ class Tasks extends BaseController
 
 		if(isset($_POST['taskid']) && $_POST['taskid'] > 0 && $time) {
 
-			$data = [ 'title'=>$_POST['title'], 'start_time'=>strtotime($_POST['start_time']), 'taskid'=>$_POST['taskid'] ];
+			$data = [ 'title'=>$_POST['title'], 'start_time'=>convertTime($_POST['start_time']), 'taskid'=>$_POST['taskid'] ];
 
 			$result = $this->LData->editTask($data);
 

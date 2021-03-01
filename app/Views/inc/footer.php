@@ -24,6 +24,10 @@
 </div>
 
 <script src="<?php echo base_url('assets/js/custom.js'); ?>"></script>
-
+<script type="text/javascript">
+            $(function () {
+                $('.datetimepicker').datetimepicker();
+            });
+        </script>
 </body>
 </html>

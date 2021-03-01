@@ -66,6 +66,12 @@ function setAPIResponse($message, $status, $other=null)
 function convertDate($timestamp) 
 {
 
-	
-return  gmdate("d-m-Y", $timestamp);
+	return  $timestamp;//gmdate("d/mY H:i", $timestamp);
+}
+
+function convertTime($date)
+{
+
+	$d = $_POST['start_time'];//date('m/d/y h:i',strtotime($_POST['start_time']));
+	return  $d;
 }

@@ -9,10 +9,16 @@
 		</div>
 		<div class="form-group mx-sm-3 mb-2">
 			<label for="date" class="sr-only">Date</label>
-			<input type="text" class="form-control" name="start_time" id="start_time" value="<?= convertDate($data[0]['start_time']) ?>" >
+			<input type="text" class="form-control datetimepicker" name="start_time" id="start_time" value="<?= convertDate($data[0]['start_time']) ?>" >
 			<input type="hidden" class="form-control" name="id"  value="<?= $data[0]['id'] ?>" >
 		</div>
 
 		<button type="button" class="btn btn-primary save-task">Save changes</button>
 	</div>
 </div>
+
+<script type="text/javascript">
+	$(function () {
+	    $('.datetimepicker').datetimepicker();
+	});
+</script>

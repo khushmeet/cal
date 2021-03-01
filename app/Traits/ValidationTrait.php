@@ -94,10 +94,10 @@ Trait ValidationTrait
             ],
             'start_time' => [
                 'label'  => 'Start time',
-                'rules'  => 'trim|required|integer',
+                'rules'  => 'trim|required',
                 'errors' => [
                     'required' => '{field} required',
-                    'integer' => '{field} must to be unix timestamp'
+                    'integer' => '{field} must to be valid '
                 ]
             ],
             

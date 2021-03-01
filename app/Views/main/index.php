@@ -20,7 +20,7 @@
         					<div id="myDIV" class="header">
         						<h2 > <span>My</span> To Do List</h2>
         						<input type="text"  name="title" placeholder="Title...">
-        						<input type="date"  name="start_time" placeholder="dd/mm/yyy">
+        						<input type="text" class="datetimepicker"  name="start_time" placeholder="mm/dd/yyy">
         						<span class="addBtn" id="add-task">Add</span>
 
                     <div class="errormsg"></div>
