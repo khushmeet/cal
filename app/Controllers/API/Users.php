@@ -50,12 +50,12 @@ class Users extends BaseAPIController
             if ($this->userModel->insert($data)) {
 
                 // set API response via helper
-                $response = setAPIresponse('User created successfully.', 200);
+                $response = setAPIresponse(['Success'=>'User created successfully.'], 200);
 
             } else {
 
                 // OWASP : Dont reveal any info just say cannot create
-                $response = setAPIresponse('Failed to create user.', 500);
+                $response = setAPIresponse(['Failed'=>'Failed to create user.'], 500);
  
             }
 
@@ -102,7 +102,7 @@ class Users extends BaseAPIController
             } else {
 
                 // incorrect values 
-                $response = setAPIresponse('Invalid email/password combination.', 500);
+                $response = setAPIresponse(['Failed'=>'Invalid email/password combination.'], 500);
 
             }
 
@@ -129,12 +129,12 @@ class Users extends BaseAPIController
             $token =  $this->createToken($userdata);
 
             // set API response via helper
-            $response = setAPIresponse('Login successfully.', 200, ['token'=>$token]);
+            $response = setAPIresponse(['Success'=>'Login successfully.'], 200, ['token'=>$token]);
 
         }else {
 
             // set API response via helper
-            $response = setAPIresponse('Invalid email/password combination.', 500);
+            $response = setAPIresponse(['Failed'=>'Invalid email/password combination.'], 500);
 
         }
 
@@ -152,7 +152,7 @@ class Users extends BaseAPIController
         $decoded = $this->fetchHeaders();
 
         // set API response via helper
-        $response = setAPIresponse('Success', 200, ['data' => $decoded]);
+        $response = setAPIresponse(['Success'=>'User detail found'], 200, ['data' => $decoded]);
 
         return $this->respond($response);
         

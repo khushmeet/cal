@@ -96,7 +96,7 @@ class BaseAPIController extends BaseController
         } catch (Exception $e) {
   
             // set API response via helper
-            $response = setAPIresponse($e->getMessage(), 400);
+            $response = setAPIresponse(['Failed'=>$e->getMessage()], 400);
 
             returnJson($response);
         }
@@ -115,7 +115,7 @@ class BaseAPIController extends BaseController
         if(!$authHeader) {
             
             // set API response via helper
-            $response = setAPIresponse('Authorization token required', 400);
+            $response = setAPIresponse(['Success'=>'Authorization token required'], 400);
             
             returnJson($response);
 

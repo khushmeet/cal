@@ -31,13 +31,13 @@ class Schedule extends BaseAPIController
 	public function index()
 	{
         // Validate Auth and fetch data
-        $this->validateRequest();
+        $this->validateRequest(1);
 
         // get task from db
         $task = $this->scheduleModel->where('user_id',  $this->userdata->data->id)->findAll();
 
         // set API response via helper
-        $response = setAPIresponse('Success', 200, ['data' => $task] );
+        $response = !empty($task) ? setAPIresponse(['Success'=>'Data Found'], 200, ['data' => $task] ) : setAPIresponse(['Success'=>'Data not Found'], 200 );
 
         // return response
         return $this->respond($response);
@@ -58,7 +58,7 @@ class Schedule extends BaseAPIController
         $task = $this->scheduleModel->where(['user_id'=>$this->userdata->data->id, 'id'=>$this->taskid ])->findAll();
 
         // set API response via helper
-        $response = setAPIresponse('Success', 200, ['data'=>$task]);
+        $response = !empty($task) ? setAPIresponse(['Success'=>'Data Found'], 200, ['data' => $task] ) : setAPIresponse(['Success'=>'Data not Found'], 200 );
 
         // return response
         return $this->respond($response);
@@ -77,9 +77,8 @@ class Schedule extends BaseAPIController
         $this->validateRequest();
 
         $data = [
-                'user_id' => $this->userdata->data->id,
                 'title' => $this->request->getVar('title'),
-                'start_time' => $this->request->getVar('start_time')
+                'start_time' => $this->request->getVar('start_time'),
         ];
 
         // validate user task data from traits
@@ -95,17 +94,19 @@ class Schedule extends BaseAPIController
                 
         } else {
 
-            // try to Register the user 
-            if ($this->scheduleModel->insert($data)) {
+            // check if id exist in db
+            if($this->scheduleModel->where(['user_id'=>$this->userdata->data->id, 'id'=>$this->taskid ])->findAll()) {
+
+                // delete task from db
+                $this->scheduleModel->update(['id'=>$this->taskid, 'user_id' => $this->userdata->data->id], $data);
+
+                $response = setAPIresponse(['Success'=>'Row updated'], 200);
+
+            }else {
 
                 // set API response via helper
-                $response = setAPIresponse('Updated successfully.', 200);
+                $response = setAPIresponse(['Failed'=>'Id does not exist.'], 400);
 
-            } else {
-
-                // OWASP : Dont reveal any info just say cannot create
-                $response = setAPIresponse('Failed.', 500);
- 
             }
 
         }
@@ -121,7 +122,7 @@ class Schedule extends BaseAPIController
         $data = [
                 'user_id' => $this->userdata->data->id,
                 'title' => $this->request->getVar('title'),
-                'start_time' => $this->request->getVar('start_time')
+                'start_time' => $this->request->getVar('start_time'),
         ];
 
         // validate task data from traits
@@ -133,20 +134,20 @@ class Schedule extends BaseAPIController
                 $data =   $this->validation->getErrors();
 
                 // set API response via helper
-                $response = setAPIresponse($data,400);
+                $response = setAPIresponse($data,400,);
                 
         } else {
 
             // try to Register the user 
-            if ($this->scheduleModel->insert($data)) {
-                
+            if ($insert_id =  $this->scheduleModel->insert($data)) {
+
                 // set API response via helper
-                $response = setAPIresponse('Updated successfully.', 200);
+                $response = setAPIresponse(['Success'=>'Added successfully.'], 200, ['Insert id' => $insert_id]);
 
             } else {
 
-                // OWASP : Dont reveal any info just say cannot create
-                $response = setAPIresponse('Failed.', 500);
+                // Unique task 
+                $response = setAPIresponse(['Failed'=>'Failed. Task already exist.'], 500);
  
             }
 
@@ -170,12 +171,12 @@ class Schedule extends BaseAPIController
             // delete task from db
             $this->scheduleModel->where(['user_id'=>$this->userdata->data->id, 'id'=>$this->taskid ])->delete();
 
-            $response = setAPIresponse('Success', 200);
+            $response = setAPIresponse(['Success'=>'Row deleted.'], 200);
 
         }else {
 
             // set API response via helper
-            $response = setAPIresponse('Id does not exist', 400);
+            $response = setAPIresponse(['Failed'=>'Id does not exist'], 400);
 
         }
             
@@ -184,7 +185,7 @@ class Schedule extends BaseAPIController
     }
         
 
-    protected function validateRequest($param=0) {
+    protected function validateRequest($bypass=0) {
 
         // get the Auth token to validate user   
         $this->userdata =  $this->fetchHeaders();
@@ -193,7 +194,7 @@ class Schedule extends BaseAPIController
         $this->taskid =  $this->request->getVar("taskid") ?? '' ;
 
         // if parameter passed are valid
-        if(isset($this->userdata->data->id) && is_numeric($this->taskid))
+        if($bypass  ||  ( isset($this->userdata->data->id) && is_numeric($this->taskid)) )
         {
 
             $this->taskid;            
@@ -201,7 +202,7 @@ class Schedule extends BaseAPIController
         }else{
 
             // if parameter is invalid
-            $response = setAPIresponse('Invalid request', 400);
+            $response = setAPIresponse(['Failed'=>'Invalid request'], 400);
    
             returnJson($response);
 

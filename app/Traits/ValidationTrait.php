@@ -23,10 +23,11 @@ Trait ValidationTrait
         $this->validation->setRules([
             'email' => [
                 'label'  => 'Email',
-                'rules'  => 'trim|required|valid_email',
+                'rules'  => 'trim|required|valid_email|is_unique[users.email]',
                 'errors' => [
                     'required' => '{field} required',
-                    'valid_email' => '{field} should be valid address'
+                    'valid_email' => '{field} should be valid address',
+                    'is_unique' => '{ Email already exist.}'
                 ]
             ],
             'name' => [
@@ -87,16 +88,19 @@ Trait ValidationTrait
                 'rules'  => 'trim|required|min_length[4]',
                 'errors' => [
                     'required' => '{field} required',
-                    'min_length' => '{field} should be min 4 character.'
+                    'min_length' => '{field} should be min 4 character.',
+                    'is_unique' => 'Task already exist.'
                 ]
             ],
             'start_time' => [
-                'label'  => 'Date',
-                'rules'  => 'trim|required',
+                'label'  => 'Start time',
+                'rules'  => 'trim|required|integer',
                 'errors' => [
                     'required' => '{field} required',
+                    'integer' => '{field} must to be unix timestamp'
                 ]
-            ]
+            ],
+            
         ]);
 
     }
