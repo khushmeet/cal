@@ -10,8 +10,12 @@ use App\Models\ScheduleModel;
 class Schedule extends BaseAPIController
 {
 
-	protected $model = '';
+	protected $scheduleModel = '';
 	
+    protected $userdata = [];
+
+    protected $taskid = '';
+
 	public function __construct() {
 
         parent::__construct();
@@ -20,116 +24,189 @@ class Schedule extends BaseAPIController
 
 	}
 
+    /*
+    * Fetch all the task related to user
+    * @return String $response
+    */
 	public function index()
 	{
-		 
-        $userdata =  $this->fetchHeaders();
-         
-        if($userdata->data->id) {
+        // Validate Auth and fetch data
+        $this->validateRequest();
 
-            $user = $this->scheduleModel->where('user_id',  $userdata->data->id)->findAll();
+        // get task from db
+        $task = $this->scheduleModel->where('user_id',  $this->userdata->data->id)->findAll();
 
-             $response = [
-                    'data' => $user,
-                    'messages' => 'Success',
-                    'status' => 200
-                ];
+        // set API response via helper
+        $response = setAPIresponse('Success', 200, ['data' => $task] );
 
-            return $this->respond($response);
-        }
-
+        // return response
+        return $this->respond($response);
+        
 	}
 
 
-	// get single
-    public function show($id = null)
+	/*
+    * Fetch single task 
+    * @return string $response
+    */
+    public function show()
     {
+        // Validate Auth and fetch data
+        $this->validateRequest();
 
-        echo $id;
-echo "string";
-exit();
-        $data = $model->getWhere(['id' => $id])->getResult();
+        // get task from db
+        $task = $this->scheduleModel->where(['user_id'=>$this->userdata->data->id, 'id'=>$this->taskid ])->findAll();
 
-        if($data) {
+        // set API response via helper
+        $response = setAPIresponse('Success', 200, ['data'=>$task]);
+
+        // return response
+        return $this->respond($response);
+       
+                
+    }
+ 
+    /*
+    * Update task
+    * @return string $response
+    */
+    public function update()
+    {
         
-            return $this->respond($data);
-        
-        }else {
-        
-            return $this->failNotFound('No Data Found with id '.$id);
+        // validate user  and task
+        $this->validateRequest();
+
+        $data = [
+                'user_id' => $this->userdata->data->id,
+                'title' => $this->request->getVar('title'),
+                'start_time' => $this->request->getVar('start_time')
+        ];
+
+        // validate user task data from traits
+        $this->taskValidation($data);
+
+        if ( $this->validation->withRequest($this->request)->run() == FALSE) {
+
+                // Return the error response
+                $data =   $this->validation->getErrors();
+
+                // set API response via helper
+                $response = setAPIresponse($data,400);
+                
+        } else {
+
+            // try to Register the user 
+            if ($this->scheduleModel->insert($data)) {
+
+                // set API response via helper
+                $response = setAPIresponse('Updated successfully.', 200);
+
+            } else {
+
+                // OWASP : Dont reveal any info just say cannot create
+                $response = setAPIresponse('Failed.', 500);
+ 
+            }
+
         }
+        
+        return $this->respond($response);
     }
- 
-    // create 
-    public function create()
+
+    public function insert()
     {
-        echo "create";
-        echo  $_GET['id'];
-        exit();
+
+        $this->userdata =  $this->fetchHeaders();
+
         $data = [
-            'product_name' => $this->request->getVar('product_name'),
-            'product_price' => $this->request->getVar('product_price')
+                'user_id' => $this->userdata->data->id,
+                'title' => $this->request->getVar('title'),
+                'start_time' => $this->request->getVar('start_time')
         ];
 
-        $this->model->insert($data);
-        $response = [
-            'status'   => 201,
-            'error'    => null,
-            'messages' => [
-                'success' => 'Data Saved'
-            ]
-        ];
-        
-        return $this->respondCreated($response);
-    }
- 
-    // update 
-    public function update($id = null)
-    {
-        $input = $this->request->getRawInput();
-        
-        $data = [
-            'product_name' => $input['product_name'],
-            'product_price' => $input['product_price']
-        ];
-        
-        $this->model->update($id, $data);
-        
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => [
-                'success' => 'Data Updated'
-            ]
-        ];
+        // validate task data from traits
+        $this->taskValidation($data);
 
+        if ( $this->validation->withRequest($this->request)->run() == FALSE) {
+
+                // Return the error response
+                $data =   $this->validation->getErrors();
+
+                // set API response via helper
+                $response = setAPIresponse($data,400);
+                
+        } else {
+
+            // try to Register the user 
+            if ($this->scheduleModel->insert($data)) {
+                
+                // set API response via helper
+                $response = setAPIresponse('Updated successfully.', 200);
+
+            } else {
+
+                // OWASP : Dont reveal any info just say cannot create
+                $response = setAPIresponse('Failed.', 500);
+ 
+            }
+
+        }
+        
         return $this->respond($response);
     }
  
-    // delete 
-    public function delete($id = null)
+    /*
+    * Delete the task
+    * @return string $response
+    */ 
+    public function delete()
     {
         
-        $data = $this->model->find($id);
-        
-        if($data){
-            $model->delete($id);
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => [
-                    'success' => 'Data Deleted'
-                ]
-            ];
+        // validate user  and task
+        $this->validateRequest();
 
-            return $this->respondDeleted($response);
-        
-        }else{
-        
-            return $this->failNotFound('No Data Found with id '.$id);
-        
+        if($this->scheduleModel->where(['user_id'=>$this->userdata->data->id, 'id'=>$this->taskid ])->findAll()) {
+
+            // delete task from db
+            $this->scheduleModel->where(['user_id'=>$this->userdata->data->id, 'id'=>$this->taskid ])->delete();
+
+            $response = setAPIresponse('Success', 200);
+
+        }else {
+
+            // set API response via helper
+            $response = setAPIresponse('Id does not exist', 400);
+
         }
+            
+        return $this->respond($response);
+
+    }
+        
+
+    protected function validateRequest($param=0) {
+
+        // get the Auth token to validate user   
+        $this->userdata =  $this->fetchHeaders();
          
+        // set the task id 
+        $this->taskid =  $this->request->getVar("taskid") ?? '' ;
+
+        // if parameter passed are valid
+        if(isset($this->userdata->data->id) && is_numeric($this->taskid))
+        {
+
+            $this->taskid;            
+
+        }else{
+
+            // if parameter is invalid
+            $response = setAPIresponse('Invalid request', 400);
+   
+            returnJson($response);
+
+        }
+
     }
 
 

@@ -39,9 +39,10 @@ Trait ValidationTrait
             ],
             'password' => [
                 'label'  => 'Password ',
-                'rules'  => 'trim|required',
+                'rules'  => 'trim|required|min_length[6]',
                 'errors' => [
                     'required' => '{field} required',
+                    'min_length' => '{field} should be min 6 character long'
                 ]
             ]
         ]);
@@ -65,6 +66,32 @@ Trait ValidationTrait
             ],
             'password' => [
                 'label'  => 'Password ',
+                'rules'  => 'trim|required',
+                'errors' => [
+                    'required' => '{field} required',
+                ]
+            ]
+        ]);
+
+    }
+
+    /**
+     * Runs the validation check for task data.
+     */
+    public function taskValidation(array $data)
+    {
+        // validate the request
+        $this->validation->setRules([
+            'title' => [
+                'label'  => 'Title',
+                'rules'  => 'trim|required|min_length[4]',
+                'errors' => [
+                    'required' => '{field} required',
+                    'min_length' => '{field} should be min 4 character.'
+                ]
+            ],
+            'start_time' => [
+                'label'  => 'Date',
                 'rules'  => 'trim|required',
                 'errors' => [
                     'required' => '{field} required',

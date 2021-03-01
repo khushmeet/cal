@@ -9,18 +9,13 @@ use \Firebase\JWT\JWT;
 class Users extends BaseAPIController
 {
 
-	public function __construct() {
+	public function __construct() 
+    {
 
         parent::__construct();
+
 		$this->userModel = new UsersModel();
 
-	}
-
-	public function index()
-	{
-		$data = $this->model->findAll();
-
-        return $this->respond($data);
 	}
 
     /**
@@ -33,41 +28,34 @@ class Users extends BaseAPIController
     
     	
         $data = [
-            "name" => $this->request->getVar("name"),
-            "email" => $this->request->getVar("email"),
-            "password" => password_hash($this->request->getVar("password"), PASSWORD_DEFAULT),
+                "name" => $this->request->getVar("name"),
+                "email" => $this->request->getVar("email"),
+                "password" => password_hash($this->request->getVar("password"), PASSWORD_DEFAULT),
         ];
         
         // validate user data from traits
         $this->registerValidation($data);
 
         if ( $this->validation->withRequest($this->request)->run() == FALSE) {
+
                 // Return the error response
                 $data =   $this->validation->getErrors();
 
-                 $response = [
-                    'messages' => $data,
-                    'status' => 400
-                ];
+                // set API response via helper
+                $response = setAPIresponse($data,400);
                 
-
         } else {
 
             // try to Register the user 
             if ($this->userModel->insert($data)) {
 
-                $response = [
-                    'message' => 'User created successfully.',
-                    'status' => 200
-                ];
+                // set API response via helper
+                $response = setAPIresponse('User created successfully.', 200);
 
             } else {
 
                 // OWASP : Dont reveal any info just say cannot create
-                $response = [
-                    'message' => 'Failed to create user.',
-                    'status' => 500
-                ];
+                $response = setAPIresponse('Failed to create user.', 500);
  
             }
 
@@ -84,26 +72,24 @@ class Users extends BaseAPIController
     */
 	public function validateUser() 
 	{
+
 		$data = [
-        
-            "email" => $this->request->getVar("email"),
-            "password" => $this->request->getVar("password"),
-        
+                "email" => $this->request->getVar("email"),
+                "password" => $this->request->getVar("password"),
         ];
 
         // validate user data from traits
         $this->loginValidation($data);
 
-         if ( $this->validation->withRequest($this->request)->run() == FALSE) {
+        if ( $this->validation->withRequest($this->request)->run() == FALSE) {
 
+            // Get validation errors
             $data =   $this->validation->getErrors();
 
-            $response = [
-                    'messages' => $data,
-                    'status' => 400
-                ];
+            // set API response via helper
+            $response = setAPIresponse($data, 400);
 
-         } else {
+        } else {
 
             $userdata = $this->userModel->getWhere(['email' => $data['email'] ])->getResultArray();
 
@@ -116,13 +102,11 @@ class Users extends BaseAPIController
             } else {
 
                 // incorrect values 
-                $response = [
-                    'message' => 'Invalid email/password combination.',
-                    'status' => 500
-                ];
+                $response = setAPIresponse('Invalid email/password combination.', 500);
+
             }
 
-         }
+        }
 
 		return $this->respond($response);
 	}
@@ -144,19 +128,13 @@ class Users extends BaseAPIController
             // password validated create jwt payload
             $token =  $this->createToken($userdata);
 
-            $response = [
-                    'token' => $token,
-                    'message' => 'Login successfully.',
-                    'status' => 200
-                ];
-            
+            // set API response via helper
+            $response = setAPIresponse('Login successfully.', 200, ['token'=>$token]);
 
         }else {
 
-            $response = [
-                    'message' => 'Invalid email/password combination.',
-                    'status' => 500
-                ];
+            // set API response via helper
+            $response = setAPIresponse('Invalid email/password combination.', 500);
 
         }
 
@@ -164,46 +142,20 @@ class Users extends BaseAPIController
 
     }
 
-     
-
-
+    /*
+    * Fetch the user details from token
+    * @return string Response
+    */
     public function userDetails()
     {
+        // fetch the header data
+        $decoded = $this->fetchHeaders();
 
-        $authHeader = $this->request->getHeader("Authorization");
+        // set API response via helper
+        $response = setAPIresponse('Success', 200, ['data' => $decoded]);
+
+        return $this->respond($response);
         
-        if(!$authHeader) {
-
-            return $this->failValidationError('Request Failed');
-
-        }
-
-        try {
-
-            $token = $authHeader->getValue();
-
-
-            $decoded =  $this->decodeToken($token);
-
-            if ($decoded) {
-
-                $response = [
-                        'status' => 200,
-                        'messages' => 'User details',
-                        'data' => $decoded
-                ];
-
-                return $this->respondCreated($response);
-            }
-        } catch (Exception $ex) {
-            
-            $response = [
-                    'status' => 401,
-                    'messages' => 'Access denied'
-            ];
-
-            return $this->respondCreated($response);
-        }
     }
 
 

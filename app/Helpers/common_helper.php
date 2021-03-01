@@ -41,3 +41,24 @@ function returnJson($response)
         exit;
 
 }
+
+/*
+* This function set response
+* @param array | string $message
+* @return array
+*/
+function setAPIResponse($message, $status, $other=null)
+{
+	$response = [
+		'messages' => $message,
+		'status' =>  $status
+	];
+
+	if($other) {
+		
+		$response = array_merge($response, $other);
+	}
+
+	return $response;
+
+}

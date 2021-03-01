@@ -33,14 +33,15 @@ class BaseAPIController extends BaseController
     use ValidationTrait;
 
     // JWT TOKEN EXPIRE TIME
-    const TOKEN_EXPIRE = 3600;
+    const TOKEN_EXPIRE = 8600;
 
-    // JWT TOKEN KEY
+    // JWT SECRET TOKEN KEY
     const KEY  = 'MtZUqbz4JD';
 
 	/**
 	 * On __construct
-     * @TODO create transactionLog
+     * @todo create transactionLog
+     * @todo create caching mechanism 
 	 */
 	public function __construct()
 	{
@@ -75,7 +76,7 @@ class BaseAPIController extends BaseController
     }
 
     /**
-    * Decode Token exit if invalid or expired token
+    * Decode Token received from Auth
     * @param  array $data
     * @return string Token 
     */
@@ -94,15 +95,10 @@ class BaseAPIController extends BaseController
 
         } catch (Exception $e) {
   
-            $response = [
-                    
-                    'messages' => $e->getMessage(),
-                    'status' => 400
-                ];
+            // set API response via helper
+            $response = setAPIresponse($e->getMessage(), 400);
 
-            header('Content-Type: application/json');
-            echo json_encode($response);
-            exit();
+            returnJson($response);
         }
 
     }
@@ -114,17 +110,21 @@ class BaseAPIController extends BaseController
     {
 
         $authHeader = $this->request->getHeader("Authorization");
-        
-        if(!$authHeader) {
 
-            return $this->failValidationError('Request Failed');
+        // exist if no Auth token is present in request
+        if(!$authHeader) {
+            
+            // set API response via helper
+            $response = setAPIresponse('Authorization token required', 400);
+            
+            returnJson($response);
 
         }
 
         // get token value from header
         $token = $authHeader->getValue();
 
-        return  $this->decodeToken( $token );
+        return  $this->decodeToken($token);
 
     }
 

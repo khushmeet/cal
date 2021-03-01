@@ -50,20 +50,20 @@ $routes->add('logout', 'Main::logout');
  * API END POINTS
  * --------------------------------------------------------------------
  */
-
-
-
 //Routing
  $routes->group("api", function ($routes) {
 
+ 	// user routing
    	$routes->post("register", "API/Users::createUser");
 	$routes->post("login",   "API/Users::validateUser");
 	$routes->get("userdata", "API/Users::userDetails");
 
 	// Schedule routing
 	$routes->get('get-schedule', 'API/Schedule::index');
-	$routes->put('show-schedule', 'API/Schedule::show');
-	$routes->get('create-schedule', 'API/Schedule::create');
+	$routes->get('show-schedule', 'API/Schedule::show');
+	$routes->post('update-schedule', 'API/Schedule::update');
+	$routes->post('create-schedule', 'API/Schedule::insert');
+	$routes->get('delete-schedule', 'API/Schedule::delete');
 
  });
 
