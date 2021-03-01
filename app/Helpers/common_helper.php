@@ -16,9 +16,8 @@ function loginCheck()
 }
 
 /*
-* This function make user goesnot goes to login / register page once loged in
+* This function make sure user does not land to login / register page once loged in
 */
-
 function isLoggedIn() 
 {
 
@@ -74,4 +73,5 @@ function convertTime($date)
 
 	$d = $_POST['start_time'];//date('m/d/y h:i',strtotime($_POST['start_time']));
 	return  $d;
+	
 }

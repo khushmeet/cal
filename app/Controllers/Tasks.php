@@ -14,21 +14,25 @@ class Tasks extends BaseController
 	public function __construct() 
 	{
 
+		// call date lib to talk to API
 		$this->LData = new \App\Libraries\Data();
 	}
 
 	/**
 	* List all the tasks task list view
+	* @return string
 	*/
 	public function index()
 	{
 
 		loginCheck();
 
+		// get all tasks
 		$result = $this->LData->getAllTask();
 
 		if(!empty($result['response']['data'])) {
 
+			// load response 
 			$response['html'] =   view('main\tasks',$result['response']);
 
 		}else{
@@ -42,6 +46,7 @@ class Tasks extends BaseController
 
 	/**
 	* Deletes task list view
+	* @return string
 	*/
 	public function addTask()
 	{
@@ -54,6 +59,7 @@ class Tasks extends BaseController
 
 			$data = [ 'title'=>$_POST['title'], 'start_time'=>convertTime($_POST['start_time']) ];
 			
+			// call lib to insert task			
 			$result = $this->LData->addTask($data);
 
 			returnJson($result);
@@ -82,6 +88,9 @@ class Tasks extends BaseController
 
 	/**
 	* Edit task 
+	* @param string title
+	* @param string starttime 
+	* @return  string
 	*/
 	public function editTask()
 	{
@@ -104,6 +113,8 @@ class Tasks extends BaseController
 
 	/**
 	* Show task 
+	* @param int taskId
+	* @return  string
 	*/
 	public function showTask()
 	{
@@ -120,7 +131,6 @@ class Tasks extends BaseController
 				$response['html'] =   view('inc\modal_body', $result['response']);	
 			
 			}
-			
 
 			returnJson($response);
 

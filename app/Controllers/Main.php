@@ -73,6 +73,7 @@ class Main extends BaseController
 
 	/*
 	* Register User
+	* @return string
 	*/
 	public function register()
 	{

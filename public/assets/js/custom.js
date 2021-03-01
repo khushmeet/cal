@@ -156,7 +156,6 @@ var app = {
             
 		});
 		
-		
     },
 	
 	tasks : {
@@ -212,7 +211,8 @@ var app = {
 
 			app.ajaxHtml('showtask', {taskid: taskid },'' ,function (response) {
 						//console.log(response)
-					$('.modal-body').append(response.html);
+				$('.modal-body').append(response.html);
+
 			});
 
 			app.loader.remove();
@@ -222,11 +222,13 @@ var app = {
 		deleteTask : function(id) {
 
 				if(confirm("Are you sure you want to delete this task?")){
+
 					app.ajaxHtml('deletetask', {taskid:id},'' ,function (response) {
+					
 						app.tasks.loadTasks();
+					
 					});
 
-					// load task
 				}
 		},
 

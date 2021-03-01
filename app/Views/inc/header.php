@@ -16,6 +16,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js" type="text/javascript"></script>
 <script src="<?php echo base_url('assets/js/bootstrap-datetimepicker.min.js'); ?>"></script>
 
-<!------ Include the above in your HEAD tag ---------->
 
 <body>
