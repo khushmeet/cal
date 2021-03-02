@@ -65,7 +65,8 @@ class Main extends BaseController
         }
 
         // return api response
-        $response = $response['response'];
+         $response = !empty($response['response']) ?$response['response']:['message'=>'Oops! Some error occured.'];
+
         	
 		returnJson($response);
 
@@ -106,7 +107,7 @@ class Main extends BaseController
 		// Validate request
         $response = $LData->registerUser($_POST);
         
-        if(!empty($response)) {
+        if(!empty($response['response'])) {
         	
         	$response = $response['response'];
         
