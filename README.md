@@ -31,9 +31,9 @@ Once user is validated creates jwt and logged them in
 accessible to guest users<br>
 
 
-* ToDo list
- Display tasks 
- Add/delete/ edit tasks
+* ToDo list<br>
+ Display tasks <br>
+ Add/delete/ edit tasks<br>
 
 
 ## Directory Structure
