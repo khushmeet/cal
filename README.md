@@ -2,7 +2,7 @@
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/b98d6077faacf5521fba)
 
 # Db dump and setup
-* Dump Folder : db
+* Dump Folder : /db - Manually Import db to mysql
 * Setup : update .env with your mysql user pwd
 
  database.default.hostname = _YOUR_HOST_ <br>
