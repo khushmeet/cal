@@ -1,41 +1,73 @@
+# API ENV SETUP
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/b98d6077faacf5521fba)
 
-# CodeIgniter 4 Framework
+# Db dump and setup
+* Dump Folder : db
+* Setup : update .env with your mysql user pwd
 
-## What is CodeIgniter?
-
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](http://codeigniter.com).
-
-This repository holds the distributable version of the framework,
-including the user guide. It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
-
-More information about the plans for version 4 can be found in [the announcement](http://forum.codeigniter.com/thread-62615.html) on the forums.
-
-The user guide corresponding to this version of the framework can be found
-[here](https://codeigniter4.github.io/userguide/).
+ database.default.hostname = _YOUR_HOST_ <br>
+ database.default.database = _YOUR_DB_NAME_ <br>
+ database.default.username = _YOUR_DB_USERNAME_ <br>
+ database.default.password = _YOUR_DB_PASSWORD_ <br>
+ database.default.DBDriver = MySQLi  
 
 
-## Important Change with index.php
+## Summary
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+The idea of the app is that a user can register/login to the App and is able to create new notes and to update/delete previous ToDos. ToDos themselves are simple entity which has a title, description and timestamps.
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+**All routes are defined in app/Config/Routes**
 
-**Please** read the user guide for a better explanation of how CI4 works!
+## Frontend
 
-## Repository Management
+### Design Choices
+All controllers extend BaseController.
 
-We use Github issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+* Login screen : <br>
+only accessible to guest users<br>
+Once user is validated creates jwt and logged them in
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+* Register screen : <br>
+accessible to guest users<br>
+
+
+* ToDo list
+ Display tasks 
+ Add/delete/ edit tasks
+
+
+## Directory Structure
+```
+| Directory               | Purpose                                     |
+|:-----------------------:|:-------------------------------------------:|
+| App\Controllers         | handles frontend request                    |
+| App\view                | respond with the corresponding view         |
+| public\assets\css       | contain entire frontend application styling |                        
+| public\assets\css       | Contain entire frontend application styling |            
+```
+
+## Backend
+### Design Choices
+All controllers extend BaseAPIController.
+
+#### Brief logic overview:
+
+* Ensure the JSON Web Token is present and valid.
+* Run a validation check.
+* Convert response to an array.
+* Display converted response to user.
+
+## Namespace Breakdown
+```
+| Namespace               | Purpose                                     |
+|:-----------------------:|:-------------------------------------------:|
+| App\Controllers\API     | Assist with API endpints                    |
+| App\Controllers\API     | Assist with API endpints                    |
+| App\Models              | Assist with db operation                    |
+| App\Traits              | Contain small repetative logic              |              
+| App\Helpers             | Contain small repetative logic              |            
+```
+
 
 ## Contributing
 
